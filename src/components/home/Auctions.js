@@ -164,7 +164,7 @@ const Auctions = ({getInvitedAuction,auctions: {auction ,itemId,ItemName,mindecr
                         <TableRow>
                         {
                             tableHeader.map(head => 
-                                <TableCell>{head}</TableCell>
+                                <TableCell key={head}>{head}</TableCell>
                             )
                         }
                         </TableRow>

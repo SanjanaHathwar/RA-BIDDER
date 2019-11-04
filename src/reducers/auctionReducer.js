@@ -1,4 +1,4 @@
-import { GET_INVITED_AUCTIONS, INVITED_AUCTIONS_FAIL, GET_ITEM, PARTICIPATE } from "../actions/type";
+import { GET_INVITED_AUCTIONS, INVITED_AUCTIONS_FAIL, GET_ITEM, PARTICIPATE,SAVE_BID } from "../actions/type";
 
 const initialState = {
     auction: [],
@@ -42,6 +42,12 @@ export default function( state = initialState,action ) {
                 startingprice: payload.startingprice,
                 endtime: payload.endtime
             }
+
+        case SAVE_BID:
+            return {
+
+            }
+
         default : 
             return state
             
