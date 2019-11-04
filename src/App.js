@@ -1,16 +1,40 @@
 import React from 'react';
 import { Provider } from 'react-redux'
 import store from './store';
-// import Auctions from './components/home/Auctions';
 import Navbar from './components/layout/Navbar';
+import { createMuiTheme , MuiThemeProvider } from '@material-ui/core/styles';
+import { CssBaseline } from '@material-ui/core';
+
+
+const theme = createMuiTheme({
+
+	palette: {
+		primary: {
+			
+			main: '#1089FF',
+			
+			contrastText: "#fff"
+		},
+		secondary:{
+			main: '#E95055',
+			contrastText: "#fff"
+		},
+
+		default:'#ECECEC',
+		
+	}
+});
 
 function App() {
 	return (
-		<Provider store={store}>
-			<div>
-				<Navbar/>
-			</div>
-		</Provider>
+		<MuiThemeProvider theme={theme}>
+			<Provider store={store}>
+			<CssBaseline/>
+				<div>
+					<Navbar/>
+				</div>
+			</Provider>
+		</MuiThemeProvider>
 	);
 }
 

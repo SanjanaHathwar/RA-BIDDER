@@ -1,5 +1,5 @@
 
-import { GET_INVITED_AUCTIONS ,INVITED_AUCTIONS_FAIL } from './type'
+import { GET_INVITED_AUCTIONS ,INVITED_AUCTIONS_FAIL , GET_ITEM, PARTICIPATE } from './type'
 import Axios from 'axios'
 
 
@@ -22,4 +22,23 @@ export const getInvitedAuction = () => async dispatch => {
         })
     }
     
+}
+
+export const getItem = (Itemid) => async dispatch => {
+
+    const  id= Itemid.split('#')[1]
+    const res = await Axios.get(`/item/fetchbyId/${id}`)
+    dispatch({
+        type: GET_ITEM,
+        payload: {name:res.data.itemName,id:id},
+    })
+
+}
+
+
+export const participateAuction = (min,price,id,endTime ) => dispatch => {
+    dispatch({
+        type: PARTICIPATE,
+        payload: {mindecrement: min,startingprice: price , auctionId: id , endtime: endTime}
+    })
 }
