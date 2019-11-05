@@ -1,7 +1,7 @@
 import React, { useEffect,useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { getInvitedAuction ,getItem ,participateAuction } from '../../actions/auctionAction'
+import { getInvitedAuction ,getItem ,participateAuction, saveBid, submitBid } from '../../actions/auctionAction'
 import Countdown from 'react-count-down';
 import CloseIcon from '@material-ui/icons/Close';
 import RefreshIcon from '@material-ui/icons/Refresh';
@@ -24,6 +24,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { Scrollbars } from 'react-custom-scrollbars';
 import moment from 'moment'
+import { GetLowest } from '../../actions/algorithmAction';
 
 const useStyles = makeStyles(theme => ({ 
     Paper: {
@@ -34,20 +35,31 @@ const useStyles = makeStyles(theme => ({
         opacity: 1,
         margin: 10
     },
+    Bidpaper: {
+        
+        padding: 8,
+        marginTop: -15,
+        marginLeft:-25
+
+    }
 
 }))
-const Auctions = ({getInvitedAuction,auctions: {auction ,itemId,ItemName,mindecrement,auctionId,startingprice,endtime},getItem,participateAuction}) => {
+const Auctions = ({getInvitedAuction,submitBid,auctions: {auction ,itemId,ItemName,mindecrement,auctionId,startingprice,endtime,bid},getItem,participateAuction,saveBid}) => {
     const classes = useStyles()
     const [open , setOpen] = useState(false)
     const [newBid,setBid] = useState(startingprice)
-    let time
+   
     const tableHeader = ["PRODUCT ID","PRODUCT NAME","UNITS OF MEASURE","STARTING PRICE","BID AMOUNT"]
 
     useEffect(() => {
-       setBid(startingprice)
+       
         getInvitedAuction()
-    },[getInvitedAuction,startingprice])
+    },[getInvitedAuction])
 
+    useEffect(() => {
+        setBid(startingprice)
+        GetLowest()
+    },[startingprice])
     
 
     const Moment = (start) => {
@@ -59,19 +71,21 @@ const Auctions = ({getInvitedAuction,auctions: {auction ,itemId,ItemName,mindecr
     }
     const timerOptions =  {
             endDate:  endtime
-            
-        
     }
+
+    
 
     const participate = (item,min,price,id,endTime) => {
         
+        console.log(item)
         //call getItem action
         getItem(item)
         //call participate action
         participateAuction(min,price,id,endTime)
         setOpen(true)
     }
-
+    // eslint-disable-next-line no-unused-vars
+    let time
     return (
         <div> 
             <Scrollbars  style={{ width:"100%",height:350}} >
@@ -135,30 +149,55 @@ const Auctions = ({getInvitedAuction,auctions: {auction ,itemId,ItemName,mindecr
 
             <Dialog maxWidth ='xl' fullWidth={true} open={open} onClose={() => setOpen(false)} aria-labelledby="form-dialog-title">
                 <DialogTitle>
-                    <IconButton style={{float:"right"}} aria-label="Close"  onClick={() => setOpen(false)}>
-                        <CloseIcon color="secondary"/>
-                    </IconButton>
-                    <IconButton style={{float:"right"}} aria-label="Refresh" >
-                        <RefreshIcon color="secondary"/>
-                    </IconButton>
+                    <Grid container spacing={1}>
+                        <Grid item xs={3}>
+                            <Paper className={classes.Bidpaper}>
+                                <Grid container spacing={0}>
+                                    <Grid item xs>
+                                        <span style={{ textAlign: "left" ,
+                                                    font: "Light 10px Roboto",
+                                                    fontSize: 16,
+                                                    letterSpacing: 0,
+                                                    color:"#756273" ,
+                                                    opacity: 1,
+                                                    margin: 10}}>
+                                            Submitted bid Rs. {bid}
+                                        </span>
+                                    </Grid>
+                                    
+                                </Grid>
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <Paper style={{marginTop:-15,padding:8}}>
+                                <span>WINNER</span>
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Paper  style={{fontSize:13,marginTop:-15}} className="timer">
+                                <Countdown  className="countdown"  options={timerOptions} />
+                            </Paper>
+                        </Grid>
+                        
+                        <Grid item xs>
+                            {/* <IconButton style={{float:"right"}} aria-label="Close"  onClick={() => setOpen(false)}>
+                                <CloseIcon color="secondary"/>
+                            </IconButton> */}
+                            <IconButton style={{float:"right",marginTop:-15}} aria-label="Refresh" >
+                                <RefreshIcon color="secondary"/>
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+                    
                 </DialogTitle>
                 <DialogContent>
-                <Grid container spacing={2}>
-                    <Grid item xs>
-                        <span style={{color:'#23374DCC',fontSize: 20}}>
-                            Auction {auctionId}
-                        </span><br/>
-                        <span style={{color:'#23374DCC',fontSize: 17}}>
-                            Auction for product {ItemName} with starting price of Rs.{startingprice} and minimum decrement of Rs.{mindecrement}
-                        </span>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Paper  style={{borderRadius:"40px"}} className="timer">
-                            <Countdown  className="countdown" options={timerOptions} />
-                        </Paper>
-                    </Grid>
-                </Grid>
-                <br/>
+                    <span style={{color:'#23374DCC',fontSize: 20}}>
+                        Auction {auctionId}
+                    </span><br/>
+                    <span style={{color:'#23374DCC',fontSize: 17}}>
+                        Auction for product {ItemName} with starting price of Rs.{startingprice} and minimum decrement of Rs.{mindecrement}
+                    </span>
+                <br/><br/>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -194,12 +233,12 @@ const Auctions = ({getInvitedAuction,auctions: {auction ,itemId,ItemName,mindecr
                 </Table>
                 
                             
-                </DialogContent><br/><br/>
-                <DialogActions>
-                <Button  color="primary" variant="contained">
+                </DialogContent>
+                <DialogActions><br/><br/>
+                <Button  color="primary" variant="contained" onClick={()=>saveBid(newBid)}>
                     Save
                 </Button>
-                <Button  color="primary">
+                <Button  color="primary" variant="contained" onClick={()=>submitBid(newBid)}>
                     Submit
                 </Button>
                 </DialogActions>
@@ -214,6 +253,9 @@ Auctions.propTypes = {
     getItem : PropTypes.func.isRequired,
     ItemName : PropTypes.string,
     participateAuction: PropTypes.func.isRequired,
+    saveBid:PropTypes.func.isRequired,
+    submitBid: PropTypes.func.isRequired,
+
 }
 
 const mapStateToProps = state => ({
@@ -222,4 +264,4 @@ const mapStateToProps = state => ({
     
     
 })
-export default connect(mapStateToProps,{getInvitedAuction,getItem,participateAuction})(Auctions)
+export default connect(mapStateToProps,{getInvitedAuction,getItem,participateAuction,saveBid,submitBid})(Auctions)

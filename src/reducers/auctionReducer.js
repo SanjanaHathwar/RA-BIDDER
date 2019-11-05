@@ -1,4 +1,4 @@
-import { GET_INVITED_AUCTIONS, INVITED_AUCTIONS_FAIL, GET_ITEM, PARTICIPATE,SAVE_BID } from "../actions/type";
+import { GET_INVITED_AUCTIONS, INVITED_AUCTIONS_FAIL, GET_ITEM, PARTICIPATE,SAVE_BID, SAVE_BID_FAIL ,GET_BIDS } from "../actions/type";
 
 const initialState = {
     auction: [],
@@ -10,7 +10,7 @@ const initialState = {
     itemId: null,
     bids:[],
     status: null,
-    bid: null
+    bid: 0
 }
 
 export default function( state = initialState,action ) {
@@ -30,13 +30,13 @@ export default function( state = initialState,action ) {
 
             return {
                 ...state,
-                ItemName : payload.name,
-                itemId: payload.id
+                ItemName : payload.itemName,
+                itemId: payload.itemId
             }
         case PARTICIPATE:
             return {
                 ...state,
-                bid: payload.startingprice,
+                
                 mindecrement: payload.mindecrement,
                 auctionId: payload.auctionId,
                 startingprice: payload.startingprice,
@@ -45,9 +45,19 @@ export default function( state = initialState,action ) {
 
         case SAVE_BID:
             return {
-
+                ...state,
+                bid:payload
             }
-
+        case SAVE_BID_FAIL :
+            return{
+                ...state,
+                bid: payload
+            }
+        case GET_BIDS : 
+            return {
+                ...state,
+                bids: payload
+            }
         default : 
             return state
             

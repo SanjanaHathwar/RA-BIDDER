@@ -6,10 +6,12 @@ import store from '../store'
 
 
 export const getInvitedAuction = () => async dispatch => {
+    const Suppid = store.getState().auth.supplierId
     try {
         
+        
         const res = await Axios.post(`/auction/dq`,{
-            SID : "S1"
+            SID : Suppid
         })
         dispatch({
             type: GET_INVITED_AUCTIONS,
@@ -28,10 +30,12 @@ export const getInvitedAuction = () => async dispatch => {
 export const getItem = (Itemid) => async dispatch => {
 
     const  id= Itemid.split('#')[1]
+    console.log(id)
     const res = await Axios.get(`/item/fetchbyId/${id}`)
+    console.log(res)
     dispatch({
         type: GET_ITEM,
-        payload: {name:res.data.itemName,id:id},
+        payload: res.data,
     })
 
 }
@@ -45,31 +49,35 @@ export const participateAuction = (min,price,id,endTime ) => dispatch => {
 }
 
 export const saveBid = (bid) =>async dispatch => {
+    const Suppid = store.getState().auth.supplierId
+    console.log(bid)
     try {
         const res = await Axios.post('/auction/confirmBid3',{
             auctionId : store.getState().auction.auctionId,
-            sid: "S1",
+            sid: Suppid,
             bid : bid,
             bstate : "SAVE"
         })
         dispatch({
             type: SAVE_BID,
-            payload: res.data
+            payload: bid
         })
         
     } catch (error) {
         dispatch({
             type: SAVE_BID_FAIL,
-            payload: error
+            
         })
     }
     
 }
 export const submitBid = (bid) =>async dispatch => {
+    const Suppid = store.getState().auth.supplierId
+    console.log(bid)
     try {
         const res = await Axios.post('/auction/confirmBid3',{
             auctionId : store.getState().auction.auctionId,
-            sid: "S1",
+            sid: Suppid,
             bid : bid,
             bstate : "CONFIRM"
         })

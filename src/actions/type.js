@@ -11,5 +11,7 @@ export const PARTICIPATE = "PARTICIPATE";
 export const LOWEST = "LOWEST";
 export const NOT_LOWEST = "NOT_LOWEST";
 export const GET_BIDS = "GET_BIDS";
+export const LOGIN_SUCCESSFUL = "LOGIN_SUCCESSFUL";
+export const LOGIN_FAIL = "LOGIN_FAIL";
 
 
