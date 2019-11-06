@@ -1,4 +1,5 @@
-import { GET_INVITED_AUCTIONS, INVITED_AUCTIONS_FAIL, GET_ITEM, PARTICIPATE,SAVE_BID, SAVE_BID_FAIL ,GET_BIDS } from "../actions/type";
+import { GET_INVITED_AUCTIONS, INVITED_AUCTIONS_FAIL, GET_ITEM, PARTICIPATE,SAVE_BID, SAVE_BID_FAIL ,GET_BIDS, LOWEST } from "../actions/type";
+import Timsort from 'timsort'
 
 const initialState = {
     auction: [],
@@ -54,9 +55,16 @@ export default function( state = initialState,action ) {
                 bid: payload
             }
         case GET_BIDS : 
+            // var Sorted = Timsort.sort(payload)
             return {
                 ...state,
                 bids: payload
+            }
+
+        case LOWEST :
+
+            return {
+
             }
         default : 
             return state

@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
     }
 
 }))
-const Auctions = ({getInvitedAuction,submitBid,auctions: {auction ,itemId,ItemName,mindecrement,auctionId,startingprice,endtime,bid},getItem,participateAuction,saveBid}) => {
+const Auctions = ({getInvitedAuction,GetLowest,submitBid,auctions: {auction ,itemId,ItemName,mindecrement,auctionId,startingprice,endtime,bid},getItem,participateAuction,saveBid}) => {
     const classes = useStyles()
     const [open , setOpen] = useState(false)
     const [newBid,setBid] = useState(startingprice)
@@ -52,13 +52,14 @@ const Auctions = ({getInvitedAuction,submitBid,auctions: {auction ,itemId,ItemNa
     const tableHeader = ["PRODUCT ID","PRODUCT NAME","UNITS OF MEASURE","STARTING PRICE","BID AMOUNT"]
 
     useEffect(() => {
-       
+        
         getInvitedAuction()
+        
     },[getInvitedAuction])
 
     useEffect(() => {
         setBid(startingprice)
-        GetLowest()
+       
     },[startingprice])
     
 
@@ -82,6 +83,8 @@ const Auctions = ({getInvitedAuction,submitBid,auctions: {auction ,itemId,ItemNa
         getItem(item)
         //call participate action
         participateAuction(min,price,id,endTime)
+        //call GetLow action
+        GetLowest()
         setOpen(true)
     }
     // eslint-disable-next-line no-unused-vars
@@ -255,7 +258,7 @@ Auctions.propTypes = {
     participateAuction: PropTypes.func.isRequired,
     saveBid:PropTypes.func.isRequired,
     submitBid: PropTypes.func.isRequired,
-
+    GetLowest: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
@@ -264,4 +267,4 @@ const mapStateToProps = state => ({
     
     
 })
-export default connect(mapStateToProps,{getInvitedAuction,getItem,participateAuction,saveBid,submitBid})(Auctions)
+export default connect(mapStateToProps,{GetLowest,getInvitedAuction,getItem,participateAuction,saveBid,submitBid})(Auctions)
