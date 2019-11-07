@@ -6,9 +6,10 @@ import store from '../store'
 
 
 export const getInvitedAuction = () => async dispatch => {
-    const Suppid = store.getState().auth.supplierId
+    
     try {
-        
+       
+        const Suppid = store.getState().auth.supplierId
         
         const res = await Axios.post(`/auction/dq`,{
             SID : Suppid
@@ -83,7 +84,7 @@ export const submitBid = (bid) =>async dispatch => {
         })
         dispatch({
             type: SUBMIT_BID,
-            payload: res.data
+            payload: bid
         })
         
     } catch (error) {

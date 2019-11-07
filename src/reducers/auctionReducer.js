@@ -1,4 +1,4 @@
-import { GET_INVITED_AUCTIONS, INVITED_AUCTIONS_FAIL, GET_ITEM, PARTICIPATE,SAVE_BID, SAVE_BID_FAIL ,GET_BIDS, LOWEST } from "../actions/type";
+import { GET_INVITED_AUCTIONS, INVITED_AUCTIONS_FAIL, GET_ITEM, PARTICIPATE,SAVE_BID,SUBMIT_BID, SAVE_BID_FAIL ,GET_BIDS, LOWEST, NOT_LOWEST } from "../actions/type";
 import Timsort from 'timsort'
 
 const initialState = {
@@ -11,7 +11,8 @@ const initialState = {
     itemId: null,
     bids:[],
     status: null,
-    bid: 0
+    bid: 0,
+    winner: null
 }
 
 export default function( state = initialState,action ) {
@@ -52,7 +53,7 @@ export default function( state = initialState,action ) {
         case SAVE_BID_FAIL :
             return{
                 ...state,
-                bid: payload
+                
             }
         case GET_BIDS : 
             // var Sorted = Timsort.sort(payload)
@@ -60,12 +61,24 @@ export default function( state = initialState,action ) {
                 ...state,
                 bids: payload
             }
+        case SUBMIT_BID :
+            return{
+                ...state,
+                bid :payload
+            }
 
         case LOWEST :
 
             return {
-
+                ...state,
+                winner: 'LOWEST'
             }
+        case NOT_LOWEST : 
+            return {
+                ...state,
+                winner: "NOT LOWEST"
+            }
+            
         default : 
             return state
             

@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { getInvitedAuction ,getItem ,participateAuction, saveBid, submitBid } from '../../actions/auctionAction'
 import Countdown from 'react-count-down';
 import CloseIcon from '@material-ui/icons/Close';
+import * as TimSort from "timsort";
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { 
     Grid, 
@@ -44,7 +45,7 @@ const useStyles = makeStyles(theme => ({
     }
 
 }))
-const Auctions = ({getInvitedAuction,GetLowest,submitBid,auctions: {auction ,itemId,ItemName,mindecrement,auctionId,startingprice,endtime,bid},getItem,participateAuction,saveBid}) => {
+const Auctions = ({getInvitedAuction,GetLowest,submitBid,auctions: {auction,bids ,itemId,ItemName,mindecrement,auctionId,startingprice,endtime,bid},getItem,participateAuction,saveBid}) => {
     const classes = useStyles()
     const [open , setOpen] = useState(false)
     const [newBid,setBid] = useState(startingprice)
@@ -54,7 +55,8 @@ const Auctions = ({getInvitedAuction,GetLowest,submitBid,auctions: {auction ,ite
     useEffect(() => {
         
         getInvitedAuction()
-        
+        // let x= [{"a": 150},{"a":84759},{"a":8665}]
+        // console.log(TimSort.sort(x))
     },[getInvitedAuction])
 
     useEffect(() => {
@@ -72,7 +74,16 @@ const Auctions = ({getInvitedAuction,GetLowest,submitBid,auctions: {auction ,ite
     }
     const timerOptions =  {
             endDate:  endtime
+
     }
+
+    useEffect(() => {
+        if(auctionId) {
+            GetLowest()
+            
+        }
+    
+    }, [GetLowest,auctionId,bids])
 
     
 
@@ -81,10 +92,10 @@ const Auctions = ({getInvitedAuction,GetLowest,submitBid,auctions: {auction ,ite
         console.log(item)
         //call getItem action
         getItem(item)
-        //call participate action
+        // //call participate action
         participateAuction(min,price,id,endTime)
-        //call GetLow action
-        GetLowest()
+        // //call GetLow action
+       
         setOpen(true)
     }
     // eslint-disable-next-line no-unused-vars
@@ -259,6 +270,7 @@ Auctions.propTypes = {
     saveBid:PropTypes.func.isRequired,
     submitBid: PropTypes.func.isRequired,
     GetLowest: PropTypes.func.isRequired,
+    
 }
 
 const mapStateToProps = state => ({

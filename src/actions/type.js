@@ -13,5 +13,6 @@ export const NOT_LOWEST = "NOT_LOWEST";
 export const GET_BIDS = "GET_BIDS";
 export const LOGIN_SUCCESSFUL = "LOGIN_SUCCESSFUL";
 export const LOGIN_FAIL = "LOGIN_FAIL";
+export const DECLARE_WINNER = "DECLARE_WINNER";
 
 

@@ -17,3 +17,6 @@ export const GetLowest = () => async dispatch =>{
     }
 }
 
+export const SendWinner = () => {
+    
+}
